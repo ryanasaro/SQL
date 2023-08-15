@@ -1,0 +1,96 @@
+-- leetcode
+-- Question #1
+
+CREATE TABLE Activity (
+    machine_id INTEGER,
+    process_id INTEGER,
+    activity_type ENUM,
+    timestamp FLOAT,
+    PRIMARY KEY (machine_id, process_id, activity_type));
+
+    INSERT INTO Activity VALUES (0, 0, 'start', 0.712);
+    INSERT INTO Activity VALUES (1, 0, 'end', 1.520);
+    INSERT INTO Activity VALUES (2, 0, 'start', 3.140);
+    INSERT INTO Activity VALUES (3, 0, 'end', 4.120);
+    INSERT INTO Activity VALUES (4, 0, 'start', 0.550);
+    INSERT INTO Activity VALUES (5, 0, 'end', 1.550);
+  
+
+--(DIRECTIONS)
+--There is a factory website that has several machines each running the same number of processes. Write an SQL query to find the average time each machine takes to complete a process.
+
+--The time to complete a process is the 'end' timestamp minus the 'start' timestamp. The average time is calculated by the total time to complete every process on the machine divided by the number of processes that were run.
+
+--The resulting table should have the machine_id along with the average time as processing_time, which should be rounded to 3 decimal places.
+
+--Return the result table in any order.
+
+SELECT a1.machine_id, round(avg(a2.timestamp - a1.timestamp), 3) as processing_time
+FROM Activity a1
+JOIN Activity a2
+ON a1.machine_id = a2.machine_id and a1.process_id = a2.process_id
+and a1.activity_type = 'start' and a2.activity_type = 'end'
+group by a1.machine_id;
+
+---------------------------------------------------------------------------------------------------------
+--Question #2
+--Rising Temperature
+
+CREATE TABLE Weather (id INTEGER PRIMARY KEY,
+recordDate DATE,
+temperature INTEGER);
+
+INSERT INTO Weather VALUES (1, 2015-01-01, 10);
+INSERT INTO Weather VALUES (2, 2015-01-02, 25);
+INSERT INTO Weather VALUES (3, 2015-01-03, 20);
+INSERT INTO Weather VALUES (4, 2015-01-04, 30);
+
+--DIRECTIONS
+--Find all dates' Id with higher temperatures compared to its previous dates (yesterday).
+--Return the result table in any order.
+
+SELECT w1.id
+FROM Weather w1, Weather w2
+WHERE DATEDIFF(w1.recordDate, w2.recordDate) = 1 AND w1.temperature > w2.temperature;
+
+------------------------------------------------------------------------------------------
+--Question #3
+--Product Sales Analysis
+
+CREATE TABLE Sales (
+    sale_id INTEGER,
+    product_id INTEGER,
+    year INTEGER,
+    quantity INTEGER,
+    price INTEGER,
+    PRIMARY KEY (sale_id, year),
+    FOREIGN KEY (product_id) REFERENCES Product (product_id)
+);
+
+CREATE TABLE Product (
+    product_id INTEGER PRIMARY KEY, 
+    product_name VARCHAR
+);
+
+INSERT INTO Sales VALUES (1, 100, 2008, 10, 5000);
+INSERT INTO Sales VALUES (2, 100, 2009, 12, 5000);
+INSERT INTO Sales VALUES (3, 200, 2011, 15, 9000);
+
+INSERT INTO Product VALUES (100, 'Nokia');
+INSERT INTO Product VALUES (200, 'Apple');
+INSERT INTO Product VALUES (300, 'Samsung');
+
+--DIRECTIONS
+
+--Write a solution to report the product_name, year, and price for each sale_id in the Sales table.
+--Return the resulting table in any order.
+
+SELECT P.product_name, S.year, S.price
+FROM Sales S
+JOIN Product P ON S.product_id = P.product_id;
+
+---------------------------------------------------------------------------------------------------
+
+
+
+
